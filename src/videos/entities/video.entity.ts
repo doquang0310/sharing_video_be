@@ -1,15 +1,14 @@
-import { UserEntity } from 'src/user/entities/user.entity';
+import { Users } from 'src/user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  OneToOne,
   CreateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class VideoEntity {
+export class Videos {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,8 +26,8 @@ export class VideoEntity {
   @Column()
   down_vote: Number;
 
-  @ManyToOne(() => UserEntity, (user: UserEntity) => user.videos)
-  publishedBy: UserEntity;
+  @ManyToOne(() => Users, (user: Users) => user.videos)
+  publishedBy: Users;
 
   @CreateDateColumn()
   createdDate: Date;

@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VideoEntity } from './entities/video.entity';
+import { Videos } from './entities/video.entity';
 import { createVideoDto } from './dto/video.dto';
 import axios from 'axios';
 import { InfoVideo } from './video.type';
+import { PaginateQuery, Paginated, paginate } from 'nestjs-paginate';
+import { VideoGateway } from './video.gateway';
 
 @Injectable()
 export class VideoService {
   constructor(
-    @InjectRepository(VideoEntity)
-    private videoRepository: Repository<VideoEntity>,
+    @InjectRepository(Videos)
+    private videoRepository: Repository<Videos>,
+    private videoGateway: VideoGateway,
   ) {}
 
-  async createVideo(data: createVideoDto): Promise<VideoEntity> {
-    const video = this.videoRepository.create({
+  async create(data: createVideoDto): Promise<Videos> {
+    const video = await this.videoRepository.save({
       url: data.url,
       title: data.title,
       description: data.description,
@@ -22,7 +25,24 @@ export class VideoService {
       down_vote: 0,
     });
 
+    await this.videoGateway.sendMessage(video);
+
     return video;
+  }
+
+  async findAll(query: PaginateQuery): Promise<Paginated<Videos>> {
+    const queryBuilder = this.videoRepository
+      .createQueryBuilder('videos')
+      .leftJoinAndSelect('videos.publishedBy', 'users')
+      .orderBy('videos.createdDate', 'DESC');
+
+    return paginate(query, queryBuilder, {
+      sortableColumns: ['createdDate'],
+      nullSort: 'last',
+      searchableColumns: ['title', 'description'],
+      defaultSortBy: [['id', 'DESC']],
+      filterableColumns: {},
+    });
   }
 
   async getDataFromUrl(id: string): Promise<InfoVideo> {

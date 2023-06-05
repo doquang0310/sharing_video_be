@@ -1,15 +1,14 @@
-import { VideoEntity } from 'src/videos/entities/video.entity';
+import { Exclude } from 'class-transformer';
+import { Videos } from 'src/videos/entities/video.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  OneToOne,
   CreateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class UserEntity {
+export class Users{
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,7 +20,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  videos : VideoEntity[];
+  videos : Videos[];
 
   @CreateDateColumn()
   createdDate: Date;
