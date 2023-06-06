@@ -1,10 +1,15 @@
-import { UserDto } from "src/user/dto/user.dto";
+import { UserDto } from 'src/user/dto/user.dto';
 
 export interface LoginResponse {
-    access_token: string;
-    data: {
-        user: {
-            email: string;
-        }
+  data: {
+    user: {
+      email: string;
+      accessToken: string;
     };
+  };
+}
+
+export interface DecodeJwt {
+  id: number;
+  email: string;
 }

@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { Users } from 'src/user/entities/user.entity';
 
 export class createVideoDto {
   @IsNotEmpty()
@@ -7,6 +8,8 @@ export class createVideoDto {
   title: string;
   @IsNotEmpty()
   description: string;
+  @IsNotEmpty()
+  publishedBy: Users;
 }
 
 export class createVideoByUrlDto {

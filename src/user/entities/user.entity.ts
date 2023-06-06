@@ -17,7 +17,8 @@ export class Users{
   })
   email: string;
 
-  @Column()
+  @Exclude()
+  @Column({ select: false})
   password: string;
 
   videos : Videos[];

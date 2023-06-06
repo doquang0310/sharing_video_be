@@ -16,18 +16,18 @@ export class AuthService {
 
   async signIn(user: Users, password: string): Promise<LoginResponse> {
     const match = await bcrypt.compare(password, user.password);
-    
+
     if (!match) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, username: user.email };
+    const payload = { id: user.id, email: user.email };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
       data: {
-        user : {
-          email : user.email
-        }
+        user: {
+          email: user.email,
+          accessToken: await this.jwtService.signAsync(payload)
+        },
       },
     };
   }
@@ -40,15 +40,20 @@ export class AuthService {
       password: hash,
     });
 
-    const payload = { sub: user.id, username: user.email };
+    const payload = { id: user.id, email: user.email };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
       data: {
-        user : {
-          email : user.email
-        }
+        user: {
+          email: user.email,
+          accessToken: await this.jwtService.signAsync(payload)
+        },
       },
     };
+  }
+
+  async decodeAuthToken(token: string): Promise<any> {
+    const jwt = token.replace('Bearer ', '');
+    return this.jwtService.decode(jwt, { json: true }) as { uuid: string };
   }
 }

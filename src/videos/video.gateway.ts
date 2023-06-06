@@ -32,7 +32,7 @@ export class VideoGateway
     this.logger.log(`Client Disconnected: ${client.id}`);
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
     this.logger.log(`Client Connected: ${client.id}`);
   }
 

@@ -23,6 +23,7 @@ export class VideoService {
       description: data.description,
       up_vote: 0,
       down_vote: 0,
+      publishedBy : data.publishedBy,
     });
 
     await this.videoGateway.sendMessage(video);
@@ -59,7 +60,7 @@ export class VideoService {
     return {
       title: data.title,
       description: data.description,
-      url: `https://www.youtube.com/watch?v=${id}`,
+      url: `https://www.youtube.com/embed/${id}`,
     };
   }
 
