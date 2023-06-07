@@ -16,7 +16,6 @@ describe('App Modules (e2e)', () => {
   });
 
   it('/ (GET)', () => {
-    console.log(app.getHttpServer());
     return request(app.getHttpServer())
       .get('/tests')
       .expect(200)
