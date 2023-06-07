@@ -14,7 +14,6 @@ import { UserService } from '../user/user.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { dataSourceOptions } from '../../db/data-source';
 import { Repository } from 'typeorm';
-import { UserController } from './user.controller';
 import * as bcrypt from 'bcrypt';
 
 describe('UserService', () => {
@@ -30,7 +29,6 @@ describe('UserService', () => {
         TypeOrmModule.forFeature([Videos, Users]),
         TypeOrmModule.forRoot(dataSourceOptions),
       ],
-      controllers: [UserController],
       providers: [AuthService, UserService, JwtService],
     }).compile();
 
