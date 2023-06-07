@@ -1,5 +1,3 @@
-import { UserDto } from 'src/user/dto/user.dto';
-
 export interface LoginResponse {
   data: {
     user: {

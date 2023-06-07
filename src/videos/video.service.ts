@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Videos } from './entities/video.entity';
 import { createVideoDto } from './dto/video.dto';
 import axios from 'axios';
-import { InfoVideo } from './video.type';
+import { InfoVideo, VideoResponse } from './video.type';
 import { PaginateQuery, Paginated, paginate } from 'nestjs-paginate';
 import { VideoGateway } from './video.gateway';
 
@@ -23,7 +23,7 @@ export class VideoService {
       description: data.description,
       up_vote: 0,
       down_vote: 0,
-      publishedBy : data.publishedBy,
+      publishedBy: data.publishedBy,
     });
 
     await this.videoGateway.sendMessage(video);
@@ -31,7 +31,7 @@ export class VideoService {
     return video;
   }
 
-  async findAll(query: PaginateQuery): Promise<Paginated<Videos>> {
+  async findAll(query: PaginateQuery) {
     const queryBuilder = this.videoRepository
       .createQueryBuilder('videos')
       .leftJoinAndSelect('videos.publishedBy', 'users')
@@ -55,6 +55,11 @@ export class VideoService {
         key: 'AIzaSyCAcltS6dcjUruHJr1yVvwBzWAMdjvYBPw',
       },
     });
+
+    if (response.data.items.length === 0) {
+      throw new BadRequestException('Wrong youtube url');
+    }
+
     const data = response.data.items[0].snippet;
 
     return {

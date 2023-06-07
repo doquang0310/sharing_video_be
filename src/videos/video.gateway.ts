@@ -38,7 +38,6 @@ export class VideoGateway
 
   @SubscribeMessage('videos')
   async sendMessage(payload: Videos): Promise<void> {
-    console.log(payload)
     this.wss.emit('videos', payload);
   }
 }

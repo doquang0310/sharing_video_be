@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Users } from 'src/user/entities/user.entity';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Users } from '../user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginResponse } from './auth.type';
+import { validateEmail } from '../../ultis/regex';
 
 @Injectable()
 export class AuthService {
@@ -21,18 +26,18 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const payload = { id: user.id, email: user.email };
-
     return {
       data: {
         user: {
           email: user.email,
-          accessToken: await this.jwtService.signAsync(payload)
+          accessToken: await this.jwtService.signAsync(payload),
         },
       },
     };
   }
 
   async signUp(email: string, password: string): Promise<LoginResponse> {
+    const valiedateEmail = validateEmail(email);
     const hash = await bcrypt.hash(password, Number(process.env.SALT_ROUNDS!));
 
     const user = await this.userRepository.save({
@@ -46,7 +51,7 @@ export class AuthService {
       data: {
         user: {
           email: user.email,
-          accessToken: await this.jwtService.signAsync(payload)
+          accessToken: await this.jwtService.signAsync(payload),
         },
       },
     };

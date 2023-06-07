@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { Users } from 'src/user/entities/user.entity';
+import { Users } from '../../user/entities/user.entity';
 
 export class createVideoDto {
   @IsNotEmpty()

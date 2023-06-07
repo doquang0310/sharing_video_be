@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Videos } from 'src/videos/entities/video.entity';
+import { Videos } from '../../videos/entities/video.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -21,6 +21,7 @@ export class Users{
   @Column({ select: false})
   password: string;
 
+  @Exclude()
   videos : Videos[];
 
   @CreateDateColumn()

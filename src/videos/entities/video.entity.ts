@@ -1,4 +1,4 @@
-import { Users } from 'src/user/entities/user.entity';
+import { Users } from '../../user/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -14,6 +14,7 @@ export class Videos {
 
   @Column()
   url: string;
+  
   @Column()
   title: string;
 

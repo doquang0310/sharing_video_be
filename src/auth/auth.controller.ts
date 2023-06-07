@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserDto } from 'src/user/dto/user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { AuthService } from './auth.service';
 import { LoginResponse } from './auth.type';
 

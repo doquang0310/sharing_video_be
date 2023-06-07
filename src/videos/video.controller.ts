@@ -11,11 +11,12 @@ import {
 import { VideoService } from './video.service';
 import { Videos } from './entities/video.entity';
 import { createVideoByUrlDto, createVideoDto } from './dto/video.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
-import { UserService } from 'src/user/user.service';
-import { DecodeJwt } from 'src/auth/auth.type';
-import { AuthService } from 'src/auth/auth.service';
+import { UserService } from '../user/user.service';
+import { DecodeJwt } from '../auth/auth.type';
+import { AuthService } from '../auth/auth.service';
+import { VideoResponse } from './video.type';
 
 @Controller('videos')
 export class VideoController {
@@ -32,16 +33,17 @@ export class VideoController {
     @Body() body: createVideoByUrlDto,
   ): Promise<Videos> {
     const id = await this.videoService.getIdFromUrl(body.url);
+    
+    if (!id) {
+      throw new BadRequestException('Wrong url');
+    }
+
     const authDecode: DecodeJwt = this.authService.decodeAuthToken(auth) as any;
 
     const publishedBy = await this.userService.findOneByEmail(authDecode.email);
 
     if (!publishedBy) {
       throw new UnauthorizedException();
-    }
-
-    if (!id) {
-      throw new BadRequestException('Wrong url');
     }
 
     const data = await this.videoService.getDataFromUrl(id);
@@ -52,7 +54,7 @@ export class VideoController {
   }
 
   @Get()
-  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<Videos>> {
+  findAll(@Paginate() query: PaginateQuery) {
     return this.videoService.findAll(query);
   }
 }

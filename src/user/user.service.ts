@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
+import { validateEmail } from '../../ultis/regex';
 @Injectable()
 export class UserService {
   constructor(
@@ -11,8 +12,13 @@ export class UserService {
   ) {}
 
   async findOneByEmail(email: string): Promise<Users | null> {
-    const user = await this.userRepository.findOne({ where: { email }, select: ['id', 'email', 'password'] });
-    console.log(user)
+
+    const valiedateEmail = validateEmail(email);
+
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
     return user;
   }
 }
