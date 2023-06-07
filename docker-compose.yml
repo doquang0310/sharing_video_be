@@ -1,0 +1,47 @@
+version: '3'
+services: 
+  sharing_video_db:
+    image: postgres:14.4
+    env_file:
+      - ./.env
+    environment: 
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    container_name: sharing_video_db-${ENV}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '${DATABASE_HOST_PORT}:5432'
+    networks:
+      - be_net
+
+  sharing_video:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./.env
+    ports: 
+      - "${APP_PORT}:3000" # expose-to-the-world : only-in-the-docker
+    container_name: sharing_video-${ENV}
+    depends_on: 
+      - sharing_video_db
+    volumes: 
+      - .:/app
+      - /app/node_modules
+    command:
+          - /bin/sh
+          - -c
+          - |
+              npm run migration:run
+              npm run start:prod
+    networks:
+      - be_net
+
+volumes:
+  pgdata:
+  pgadmin-data:
+networks:
+    be_net:
+        driver: bridge
