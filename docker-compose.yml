@@ -34,8 +34,9 @@ services:
           - /bin/sh
           - -c
           - |
+              npm run build
               npm run migration:run
-              npm run start:prod
+              npm run start
     networks:
       - be_net
 
