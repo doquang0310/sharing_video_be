@@ -33,12 +33,18 @@ export class VideoController {
     @Body() body: createVideoByUrlDto,
   ): Promise<Videos> {
     const id = await this.videoService.getIdFromUrl(body.url);
-    
+
     if (!id) {
       throw new BadRequestException('Wrong url');
     }
 
-    const authDecode: DecodeJwt = this.authService.decodeAuthToken(auth) as any;
+    const authDecode: DecodeJwt = (await this.authService.decodeAuthToken(
+      auth,
+    )) as any;
+
+    if (!authDecode) {
+      throw new UnauthorizedException();
+    }
 
     const publishedBy = await this.userService.findOneByEmail(authDecode.email);
 
