@@ -4,6 +4,9 @@
 This project use [Nest](https://github.com/nestjs/nest) framework TypeScript.
 - The app includes socket.io to send notifications when new videos are available.
 - Using Authentication with JWT.
+- Using PostgreSQL v14 for database.
+- Using NodeJs 18.
+- Includes 3 main modules: Authentication, Videos, Users. Modules Videos plays the role of managing videos and notifying clients of the latest videos. Modules Authentication to ensure that only registered and logged in users can create videos. Module User to manage registered Users.
 
 ## Installation & Running app
 - Clone project.
